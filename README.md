@@ -10,6 +10,7 @@ Fablo supports:
 * RAFT, solo and BFT consensus protocols
 * Multiple organizations and channels
 * Chaincode installation and upgrade (Node, Go, Java, CCaaS)
+* **Dynamic organization onboarding via REST API** (NEW!)
 * REST API client for CA and chaincodes ([Fablo REST](https://github.com/fablo-io/fablo-rest))
 * [Blockchain Explorer](https://github.com/hyperledger/blockchain-explorer) which can be enabled for each organization
 
@@ -70,6 +71,72 @@ Fablo will manage it locally.
 
 On the other hand you can use Fablo to generate initial network configuration, keep it in version control and tweak for specific requirements.
 In this case, however, you should use generated `fablo-docker.sh` instead of `fablo` script.
+
+## Dynamic Organization Onboarding (API)
+
+Fablo now includes a REST API that allows you to dynamically add organizations and users to a running network without requiring a restart. This is useful for scenarios where you need to onboard new participants without disrupting network operations.
+
+### Starting the API Server
+
+After starting your Fablo network, you can start the API server:
+
+```bash
+# Start API server on default port (3000)
+node src/api/cli.js
+
+# Or specify a custom port
+node src/api/cli.js 8080
+```
+
+### Quick API Examples
+
+**Add a new organization:**
+```bash
+curl -X POST http://localhost:3000/api/v1/organizations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Org3",
+    "domain": "org3.example.com",
+    "peerCount": 2
+  }'
+```
+
+**Register a new user:**
+```bash
+curl -X POST http://localhost:3000/api/v1/organizations/Org3/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "alice",
+    "role": "user",
+    "attributes": {
+      "department": "sales"
+    }
+  }'
+```
+
+**Check network status:**
+```bash
+curl http://localhost:3000/api/v1/network/status
+```
+
+### Complete API Documentation
+
+For detailed information about the API, including all endpoints, request/response formats, and advanced usage:
+
+- **[Dynamic Onboarding Guide](docs/DYNAMIC_ONBOARDING.md)** - Step-by-step guide for dynamic organization onboarding
+- **[API Reference](docs/API_REFERENCE.md)** - Complete API endpoint documentation
+
+### Features
+
+The API provides the following capabilities:
+
+- **Organization Management**: Add new organizations with CA and peer containers
+- **User Management**: Register and enroll users, manage certificates
+- **Peer Management**: Add additional peers to existing organizations
+- **Network Monitoring**: Query network status and configuration
+- **Connection Profiles**: Auto-generate connection profiles for client applications
+
+
 
 ## Managing the network
 
