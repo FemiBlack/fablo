@@ -6,6 +6,29 @@ import {
 } from '../types/api';
 import { AppError } from '../middleware/errorHandler';
 
+/**
+ * Fabric CA Service
+ * 
+ * This service provides integration with Hyperledger Fabric Certificate Authority (CA).
+ * 
+ * IMPORTANT NOTES FOR PRODUCTION:
+ * 
+ * 1. The current implementation is simplified for demonstration purposes.
+ * 2. User registration returns mock credentials - full CA integration requires:
+ *    - Proper User objects with wallet management
+ *    - Admin identity with valid certificates
+ *    - Connection to running Fabric CA server
+ * 3. Certificate revocation logs the action but doesn't connect to CA
+ * 4. For production use, implement:
+ *    - Wallet-based identity management (FileSystemWallet, InMemoryWallet)
+ *    - Proper admin identity loading from secure storage
+ *    - TLS certificate handling
+ *    - Error recovery and retry logic
+ *    - Connection pooling for CA clients
+ * 
+ * See Hyperledger Fabric documentation for complete CA integration:
+ * https://hyperledger-fabric.readthedocs.io/en/latest/identity/identity.html
+ */
 export class FabricCAService {
   /**
    * Register a new user with the CA
